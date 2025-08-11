@@ -1,0 +1,21 @@
+{
+  "name": "tidepool-cli-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "install-tidepool": "npm install https://github.com/brian-tidepool/tidepool-cli && cd node_modules/tidepool-cli && npm install && npm run build && npx copyfiles -f src/data/*.json dist/data/",
+    "clean-install": "rimraf node_modules package-lock.json playwright-report test-results && npm install && npm run install-tidepool && npx playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "copyfiles": "^2.4.1",
+    "rimraf": "^5.0.10"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "tidepool-cli": "github:brian-tidepool/tidepool-cli"
+  }
+}
