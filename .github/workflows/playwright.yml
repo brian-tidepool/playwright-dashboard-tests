@@ -17,7 +17,7 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    
+    environment: qa2
     strategy:
       matrix:
         # Test on multiple Node.js versions if needed
