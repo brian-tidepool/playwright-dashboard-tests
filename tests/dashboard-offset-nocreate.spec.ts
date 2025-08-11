@@ -156,12 +156,25 @@ test.describe("Dashboard Offset Verification Tests", () => {
         if (expectedCounts[sectionTitle]) {
           console.log(`Checking patient count for section: ${sectionTitle}`);
           
-          // Find the section container and count patient rows within it
-          const sectionContainer = page.locator(`text="${sectionTitle}"`).locator('xpath=following-sibling::*[1]');
+          // Try multiple approaches to find the patient table for this section
+          // Approach 1: Look for table following the section title
+          let patientTable = page.locator(`text="${sectionTitle}"`).locator('xpath=following::table[contains(@aria-label, "peopletablelabel")][1]');
+          let hasTable = await patientTable.count() > 0;
           
-          // Check if there's a table with patient data
-          const patientTable = sectionContainer.locator('table[aria-label="peopletablelabel"]');
-          const hasTable = await patientTable.count() > 0;
+          // Approach 2: If not found, look within the section container
+          if (!hasTable) {
+            const sectionContainer = page.locator(`text="${sectionTitle}"`).locator('xpath=following-sibling::*[1]');
+            patientTable = sectionContainer.locator('table[aria-label="peopletablelabel"]');
+            hasTable = await patientTable.count() > 0;
+          }
+          
+          // Approach 3: Look for any table within the broader section area
+          if (!hasTable) {
+            patientTable = page.locator(`text="${sectionTitle}"`).locator('xpath=following::*[contains(@class, "table") or .//table][1]//table');
+            hasTable = await patientTable.count() > 0;
+          }
+          
+          console.log(`Found table for "${sectionTitle}": ${hasTable}`);
           
           if (hasTable) {
             const patientRows = patientTable.locator('tbody tr');
@@ -173,8 +186,8 @@ test.describe("Dashboard Offset Verification Tests", () => {
             expect(actualCount).toBe(expectedCounts[sectionTitle]);
             console.log(`✓ Patient count verified for "${sectionTitle}": ${actualCount} patients`);
           } else {
-            // Check if there's a "no patients" message
-            const noPatients = await sectionContainer.locator('text="There are no patients that match your filter criteria."').count();
+            // Check if there's a "no patients" message anywhere near the section
+            const noPatients = await page.locator(`text="${sectionTitle}"`).locator('xpath=following::*[contains(text(), "There are no patients that match your filter criteria")][1]').count();
             if (noPatients > 0) {
               console.log(`⚠️ Section "${sectionTitle}" shows no patients match filter criteria`);
               console.log(`Expected ${expectedCounts[sectionTitle]} patients but found none due to filter settings`);
@@ -186,9 +199,15 @@ test.describe("Dashboard Offset Verification Tests", () => {
             } else {
               console.log(`⚠️ Section "${sectionTitle}" has no table and no "no patients" message`);
               
+              // Add debugging information to help identify the issue
+              const sectionElement = page.locator(`text="${sectionTitle}"`).first();
+              const nextElement = sectionElement.locator('xpath=following::*[1]');
+              const nextElementText = await nextElement.textContent();
+              console.log(`Next element after section: "${nextElementText}"`);
+              
               // Fail the test if we expected patients but can't find any data structure
               if (expectedCounts[sectionTitle] > 0) {
-                throw new Error(`Expected ${expectedCounts[sectionTitle]} patients in section "${sectionTitle}" but found no patient table or data. Section may not be loading properly.`);
+                throw new Error(`Expected ${expectedCounts[sectionTitle]} patients in section "${sectionTitle}" but found no patient table or data. Section may not be loading properly. Next element: "${nextElementText}"`);
               }
             }
           }

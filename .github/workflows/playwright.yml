@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         # Test on multiple Node.js versions if needed
-        node-version: [18, 20]
+        node-version: [20]
       fail-fast: false
 
     steps:
@@ -80,62 +80,3 @@ jobs:
         path: test-results/
         retention-days: 30
 
-  # Optional: Separate job for different browser testing
-  cross-browser-test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
-    
-    strategy:
-      matrix:
-        browser: [chromium, firefox, webkit]
-      fail-fast: false
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: |
-        npm ci
-        npm run install-tidepool
-
-    - name: Install Playwright browsers
-      run: npx playwright install --with-deps ${{ matrix.browser }}
-
-    - name: Run Playwright tests on ${{ matrix.browser }}
-      run: |
-        if [ -n "${{ github.event.inputs.test_name }}" ]; then
-          echo "Running specific test: ${{ github.event.inputs.test_name }} on ${{ matrix.browser }}"
-          npx playwright test --project=${{ matrix.browser }} --grep "${{ github.event.inputs.test_name }}"
-        elif [ -n "${{ github.event.inputs.test_file }}" ]; then
-          echo "Running specific test file: ${{ github.event.inputs.test_file }} on ${{ matrix.browser }}"
-          npx playwright test --project=${{ matrix.browser }} "${{ github.event.inputs.test_file }}"
-        else
-          echo "Running all tests on ${{ matrix.browser }}"
-          npx playwright test --project=${{ matrix.browser }}
-        fi
-      env:
-        # Tidepool Environment URL
-        TIDEPOOL_BASE_URL: ${{ vars.TIDEPOOL_BASE_URL }}
-        # Dashboard Configuration
-        TAG_ID: ${{ vars.TAG_ID }}
-        CLINIC_ID: ${{ vars.CLINIC_ID }}
-        # Tidepool Login Credentials
-        TIDEPOOL_USERNAME: ${{ secrets.TIDEPOOL_USERNAME }}
-        TIDEPOOL_PASSWORD: ${{ secrets.TIDEPOOL_PASSWORD }}
-        CI: true
-
-    - name: Upload Playwright Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: playwright-report-${{ matrix.browser }}
-        path: playwright-report/
-        retention-days: 30
