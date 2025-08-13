@@ -98,7 +98,7 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - with data initi
       // Batch 1: Period Length = 1 day, Offset = 0
       console.log("Creating batch 1: Period Length = 1 day, Offset = 0...");
       const tirCounts1Day = {
-        "Time below 3.0 mmol/L > 1%": 40,
+        "Time below 3.0 mmol/L > 1%": 0,
         "Time below 3.9 mmol/L > 4%": 0,
         "Drop in Time in Range > 15%": 1,
         "Time in Range < 70%": 0,
