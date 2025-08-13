@@ -67,6 +67,7 @@ jobs:
         # Dashboard Configuration
         TAG_SCENARIO1_ID: ${{ vars.TAG_SCENARIO1_ID }}
         TAG_SCENARIO2_ID: ${{ vars.TAG_SCENARIO2_ID }}
+        TAG_SCENARIO3_ID: ${{ vars.TAG_SCENARIO3_ID }}
         CLINIC_ID: ${{ vars.CLINIC_ID }}
         # Tidepool Login Credentials
         TIDEPOOL_USERNAME: ${{ secrets.TIDEPOOL_USERNAME }}
