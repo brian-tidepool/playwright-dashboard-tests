@@ -12,6 +12,10 @@ on:
         description: 'Specific test file to run (optional - leave empty to run all tests)'
         required: false
         type: string
+      tag_name:
+        description: 'Tag name to filter tests (e.g., @smoke, @regression, @critical)'
+        required: false
+        type: string
 
 jobs:
   test:
@@ -44,7 +48,10 @@ jobs:
 
     - name: Run Playwright tests
       run: |
-        if [ -n "${{ github.event.inputs.test_name }}" ]; then
+        if [ -n "${{ github.event.inputs.tag_name }}" ]; then
+          echo "Running tests with tag: ${{ github.event.inputs.tag_name }}"
+          npx playwright test --grep "${{ github.event.inputs.tag_name }}"
+        elif [ -n "${{ github.event.inputs.test_name }}" ]; then
           echo "Running specific test: ${{ github.event.inputs.test_name }}"
           npx playwright test --grep "${{ github.event.inputs.test_name }}"
         elif [ -n "${{ github.event.inputs.test_file }}" ]; then
@@ -80,4 +87,3 @@ jobs:
         name: test-results-node-${{ matrix.node-version }}
         path: test-results/
         retention-days: 30
-
