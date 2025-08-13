@@ -20,7 +20,7 @@ test.describe("Tidepool CLI createDashboardOffset", () => {
     };
 
     // Get additional parameters from environment variables
-    const tagId = process.env.TAG_ID;
+    const tagId = process.env.TAG_SCENARIO1_ID;
     const clinicId = process.env.CLINIC_ID;
 
     try {
@@ -30,7 +30,7 @@ test.describe("Tidepool CLI createDashboardOffset", () => {
       }
 
       if (!tagId || !clinicId) {
-        throw new Error("Missing TAG_ID or CLINIC_ID. Please set TAG_ID and CLINIC_ID in your environment variables.");
+        throw new Error("Missing TAG_SCENARIO1_ID or CLINIC_ID. Please set TAG_SCENARIO1_ID and CLINIC_ID in your environment variables.");
       }
 
       console.log("Creating dashboard with offset...");

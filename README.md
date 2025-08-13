@@ -53,13 +53,14 @@ Create a `.env` file in the project root directory with your Tidepool credential
 TIDEPOOL_USERNAME=your-username@example.com
 TIDEPOOL_PASSWORD=your-password
 TIDEPOOL_BASE_URL=https://int-api.tidepool.org
-TAG_ID=your-tag-id
+TAG_SCENARIO1_ID=your-tag-id
+TAG_SCENARIO2_ID=your-scenario2-tag-id
 CLINIC_ID=your-clinic-id
 ```
 
 **Important Notes:**
 - Replace the values with your actual Tidepool credentials
-- The `TAG_ID` and `CLINIC_ID` are required for dashboard creation tests
+- The `TAG_SCENARIO1_ID` and `TAG_SCENARIO2_ID` and `CLINIC_ID` are required for dashboard creation tests
 - Make sure there are no extra spaces in the values
 - Never commit the `.env` file to version control
 
@@ -156,7 +157,8 @@ Tests the `createDashboardOffset` function which creates dashboard data with tim
 | `TIDEPOOL_USERNAME` | Your Tidepool account email | `user@example.com` |
 | `TIDEPOOL_PASSWORD` | Your Tidepool account password | `your-password` |
 | `TIDEPOOL_BASE_URL` | Tidepool API base URL | `https://int-api.tidepool.org` |
-| `TAG_ID` | Patient tag ID for testing | `6841e165edfe663ac4d8bff0` |
+| `TAG_SCENARIO1_ID` | Patient tag ID for scenario 1 testing | `6841e165edfe663ac4d8bff0` |
+| `TAG_SCENARIO2_ID` | Patient tag ID for scenario 2 testing | `your-scenario2-tag-id` |
 | `CLINIC_ID` | Clinic ID for testing | `633b559d1d64ad2c9471178b` |
 
 ## Troubleshooting

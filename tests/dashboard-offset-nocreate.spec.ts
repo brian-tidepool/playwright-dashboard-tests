@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Dashboard Offset Verification Tests", () => {
+test.describe("Dashboard Offset Verification Tests", { tag: '@scenario1' }, () => {
   // Declare variables at test suite level for proper scoping
   let credentials: {
     userName: string;
@@ -21,7 +21,7 @@ test.describe("Dashboard Offset Verification Tests", () => {
       baseUrl: process.env.TIDEPOOL_BASE_URL || 'https://qa2.development.tidepool.org',
     };
 
-    tagId = process.env.TAG_ID || '';
+    tagId = process.env.TAG_SCENARIO1_ID || '';
     clinicId = process.env.CLINIC_ID || '';
 
     // Validate required environment variables
@@ -30,7 +30,7 @@ test.describe("Dashboard Offset Verification Tests", () => {
     }
 
     if (!tagId || !clinicId) {
-      throw new Error("Missing TAG_ID or CLINIC_ID. Please set TAG_ID and CLINIC_ID in your environment variables.");
+      throw new Error("Missing TAG_SCENARIO1_ID or CLINIC_ID. Please set TAG_SCENARIO1_ID and CLINIC_ID in your environment variables.");
     }
 
     console.log("Environment variables validated successfully");

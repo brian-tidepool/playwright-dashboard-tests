@@ -88,7 +88,7 @@ const periodLength = 14; // days
 
 **Dependencies**:
 - `TIDEPOOL_USERNAME`, `TIDEPOOL_PASSWORD`, `TIDEPOOL_BASE_URL`
-- `TAG_ID`, `CLINIC_ID`
+- `TAG_SCENARIO1_ID`, `TAG_SCENARIO2_ID`, `CLINIC_ID`
 
 **Timeout**: 5 minutes (3,000,000ms) due to patient creation and data upload
 
@@ -132,7 +132,7 @@ const expectedCounts = {
 
 **Dependencies**:
 - `TIDEPOOL_USERNAME`, `TIDEPOOL_PASSWORD`, `TIDEPOOL_BASE_URL`
-- `TAG_ID`, `CLINIC_ID`
+- `TAG_SCENARIO1_ID`, `TAG_SCENARIO2_ID`, `CLINIC_ID`
 
 **Timeout**: 10 minutes (6,000,000ms) for comprehensive dashboard loading
 
@@ -167,7 +167,7 @@ async function cleanupDashboardPatients() {
 
 **Dependencies**:
 - `TIDEPOOL_USERNAME`, `TIDEPOOL_PASSWORD`, `TIDEPOOL_BASE_URL`
-- `TAG_ID`, `CLINIC_ID`
+- `TAG_SCENARIO1_ID`, `TAG_SCENARIO2_ID`, `CLINIC_ID`
 - `tidepool-cli/lib/deletePatients` function
 - `tidepool-cli/lib/dashboardScenarioSelector` function
 
@@ -184,7 +184,8 @@ TIDEPOOL_PASSWORD=your-password
 TIDEPOOL_BASE_URL=https://qa2.development.tidepool.org
 
 # Test Configuration
-TAG_ID=your-tag-id
+TAG_SCENARIO1_ID=your-tag-id
+TAG_SCENARIO2_ID=your-scenario2-tag-id
 CLINIC_ID=your-clinic-id
 ```
 
@@ -289,7 +290,7 @@ Access reports via: `npx playwright show-report`
 **Debug Steps**:
 1. Check console logs for table detection attempts
 2. Verify dashboard loads completely before table detection
-3. Ensure correct TAG_ID and CLINIC_ID in environment
+3. Ensure correct TAG_SCENARIO1_ID, TAG_SCENARIO2_ID and CLINIC_ID in environment
 
 #### 2. Authentication Failures
 
@@ -309,7 +310,7 @@ Access reports via: `npx playwright show-report`
 - Verify test data setup is complete
 - Check if previous test runs affected data
 - Use recreate version to reset patient data
-- Confirm TAG_ID corresponds to test data
+- Confirm TAG_SCENARIO1_ID or TAG_SCENARIO2_ID corresponds to test data
 
 #### 4. Timeout Issues
 
@@ -358,7 +359,7 @@ To add new dashboard verification:
 When changing test environments:
 
 1. Update `TIDEPOOL_BASE_URL` in `.env`
-2. Verify TAG_ID and CLINIC_ID for new environment
+2. Verify TAG_SCENARIO1_ID, TAG_SCENARIO2_ID and CLINIC_ID for new environment
 3. Update expected counts if data differs
 4. Run full test suite to verify compatibility
 
