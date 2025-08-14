@@ -68,7 +68,10 @@ jobs:
         TAG_SCENARIO1_ID: ${{ vars.TAG_SCENARIO1_ID }}
         TAG_SCENARIO2_ID: ${{ vars.TAG_SCENARIO2_ID }}
         TAG_SCENARIO3_ID: ${{ vars.TAG_SCENARIO3_ID }}
+        TAG_SCENARIO4_ID: ${{ vars.TAG_SCENARIO4_ID }}
         CLINIC_ID: ${{ vars.CLINIC_ID }}
+        # Test Configuration
+        WAIT_SUMMARY_CALCULATION_FINISH: ${{ vars.WAIT_SUMMARY_CALCULATION_FINISH }}
         # Tidepool Login Credentials
         TIDEPOOL_USERNAME: ${{ secrets.TIDEPOOL_USERNAME }}
         TIDEPOOL_PASSWORD: ${{ secrets.TIDEPOOL_PASSWORD }}

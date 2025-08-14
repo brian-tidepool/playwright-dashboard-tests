@@ -131,8 +131,10 @@ test.describe("Dashboard Scenario 3 - Period Length Variations - All Categories"
   test("should verify dashboard data with one patient in each category across different summarization periods", async ({ page }) => {
     // Set timeout for the test
     test.setTimeout(900000); // 15 minutes
-    const waitTime = 60000; // 1 minute wait time for summaries to generate
-    console.log(`Wait ${waitTime} ms for test summaries to generated`)
+    
+    // Use environment variable for wait time, with fallback to 60 seconds
+    const waitTime = parseInt(process.env.WAIT_SUMMARY_CALCULATION_FINISH || '60000', 10);
+    console.log(`Wait ${waitTime} ms for test summaries to be generated`);
     await page.waitForTimeout(waitTime);
     
     try {
