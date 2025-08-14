@@ -89,102 +89,111 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - with data initi
 
     console.log("Environment variables validated successfully");
     console.log(`Using TAG_SCENARIO2_ID: ${tagId}`);
-    console.log("Setting up dashboard scenario 2 test data with period length variations...");
+    
+    // Check if data setup should be performed (configurable via environment variable)
+    const shouldSetupData = process.env.SETUP_DASHBOARD_DATA?.toLowerCase() === 'true';
+    console.log(`Data setup ${shouldSetupData ? 'enabled' : 'disabled'} via SETUP_DASHBOARD_DATA environment variable`);
 
-    try {
-      // Pre-processing step: Clean up existing dashboard patients using the helper function
-      await cleanupDashboardPatients();
+    if (shouldSetupData) {
+      console.log("Setting up dashboard scenario 2 test data with period length variations...");
 
-      // Batch 1: Period Length = 1 day, Offset = 0
-      console.log("Creating batch 1: Period Length = 1 day, Offset = 0...");
-      const tirCounts1Day = {
-        "Time below 3.0 mmol/L > 1%": 0,
-        "Time below 3.9 mmol/L > 4%": 0,
-        "Drop in Time in Range > 15%": 1,
-        "Time in Range < 70%": 0,
-        "CGM Wear Time <70%": 0,
-        "Meeting Targets": 0
-      };
+      try {
+        // Pre-processing step: Clean up existing dashboard patients using the helper function
+        await cleanupDashboardPatients();
 
-      await createDashboardOffset(
-        tirCounts1Day,
-        1, // period length: 1 day
-        0, // offset: 0 minutes
-        "Test Patient Scenario2 1Day",
-        clinicId,
-        tagId,
-        credentials
-      );
+        // Batch 1: Period Length = 1 day, Offset = 0
+        console.log("Creating batch 1: Period Length = 1 day, Offset = 0...");
+        const tirCounts1Day = {
+          "Time below 3.0 mmol/L > 1%": 0,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 1,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
 
-      // Batch 2: Period Length = 7 days, Offset = 0
-      console.log("Creating batch 2: Period Length = 7 days, Offset = 0...");
-      const tirCounts7Days = {
-        "Time below 3.0 mmol/L > 1%": 0,
-        "Time below 3.9 mmol/L > 4%": 0,
-        "Drop in Time in Range > 15%": 1,
-        "Time in Range < 70%": 0,
-        "CGM Wear Time <70%": 0,
-        "Meeting Targets": 0
-      };
+        await createDashboardOffset(
+          tirCounts1Day,
+          1, // period length: 1 day
+          0, // offset: 0 minutes
+          "Test Patient Scenario2 1Day",
+          clinicId,
+          tagId,
+          credentials
+        );
 
-      await createDashboardOffset(
-        tirCounts7Days,
-        7, // period length: 7 days
-        0, // offset: 0 minutes
-        "Test Patient Scenario2 7Days",
-        clinicId,
-        tagId,
-        credentials
-      );
+        // Batch 2: Period Length = 7 days, Offset = 0
+        console.log("Creating batch 2: Period Length = 7 days, Offset = 0...");
+        const tirCounts7Days = {
+          "Time below 3.0 mmol/L > 1%": 0,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 1,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
 
-      // Batch 3: Period Length = 14 days, Offset = 0
-      console.log("Creating batch 3: Period Length = 14 days, Offset = 0...");
-      const tirCounts14Days = {
-        "Time below 3.0 mmol/L > 1%": 0,
-        "Time below 3.9 mmol/L > 4%": 0,
-        "Drop in Time in Range > 15%": 1,
-        "Time in Range < 70%": 0,
-        "CGM Wear Time <70%": 0,
-        "Meeting Targets": 0
-      };
+        await createDashboardOffset(
+          tirCounts7Days,
+          7, // period length: 7 days
+          0, // offset: 0 minutes
+          "Test Patient Scenario2 7Days",
+          clinicId,
+          tagId,
+          credentials
+        );
 
-      await createDashboardOffset(
-        tirCounts14Days,
-        14, // period length: 14 days
-        0, // offset: 0 minutes
-        "Test Patient Scenario2 14Days",
-        clinicId,
-        tagId,
-        credentials
-      );
+        // Batch 3: Period Length = 14 days, Offset = 0
+        console.log("Creating batch 3: Period Length = 14 days, Offset = 0...");
+        const tirCounts14Days = {
+          "Time below 3.0 mmol/L > 1%": 0,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 1,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
 
-      // Batch 4: Period Length = 30 days, Offset = 0
-      console.log("Creating batch 4: Period Length = 30 days, Offset = 0...");
-      const tirCounts30Days = {
-        "Time below 3.0 mmol/L > 1%": 0,
-        "Time below 3.9 mmol/L > 4%": 0,
-        "Drop in Time in Range > 15%": 1,
-        "Time in Range < 70%": 0,
-        "CGM Wear Time <70%": 0,
-        "Meeting Targets": 0
-      };
+        await createDashboardOffset(
+          tirCounts14Days,
+          14, // period length: 14 days
+          0, // offset: 0 minutes
+          "Test Patient Scenario2 14Days",
+          clinicId,
+          tagId,
+          credentials
+        );
 
-      await createDashboardOffset(
-        tirCounts30Days,
-        30, // period length: 30 days
-        0, // offset: 0 minutes
-        "Test Patient Scenario2 30Days",
-        clinicId,
-        tagId,
-        credentials
-      );
+        // Batch 4: Period Length = 30 days, Offset = 0
+        console.log("Creating batch 4: Period Length = 30 days, Offset = 0...");
+        const tirCounts30Days = {
+          "Time below 3.0 mmol/L > 1%": 0,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 1,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
 
-      console.log("Dashboard scenario 2 test data setup completed successfully!");
-      console.log("Created 4 batches with period lengths: 1, 7, 14, and 30 days");
-      
-    } catch (error) {
-      console.error("Setup failed with error:", error);
-      throw error;
+        await createDashboardOffset(
+          tirCounts30Days,
+          30, // period length: 30 days
+          0, // offset: 0 minutes
+          "Test Patient Scenario2 30Days",
+          clinicId,
+          tagId,
+          credentials
+        );
+
+        console.log("Dashboard scenario 2 test data setup completed successfully!");
+        console.log("Created 4 batches with period lengths: 1, 7, 14, and 30 days");
+        
+      } catch (error) {
+        console.error("Setup failed with error:", error);
+        throw error;
+      }
+    } else {
+      console.log("Skipping data setup - using existing dashboard data");
     }
   });
 

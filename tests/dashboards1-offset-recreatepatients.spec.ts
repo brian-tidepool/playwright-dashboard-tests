@@ -1,4 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { Credentials } from "tidepool-cli/lib/credentials";
+import { createDashboardOffset } from "tidepool-cli/lib/dashboardScenarioSelector";
+import { deletePatients } from "tidepool-cli/lib/deletePatients";
 
 test.describe("Dashboard Offset Verification Tests", { tag: '@scenario1' }, () => {
   // Declare variables at test suite level for proper scoping
@@ -9,6 +12,31 @@ test.describe("Dashboard Offset Verification Tests", { tag: '@scenario1' }, () =
   };
   let tagId: string;
   let clinicId: string;
+  
+  // Helper function to delete test patients using deletePatients function
+  async function cleanupDashboardPatients() {
+    try {
+      console.log("Starting cleanup of existing dashboard patients...");
+      console.log(`Calling deletePatients with clinic: ${clinicId}, tag: ${tagId}`);
+      
+      // Call the actual deletePatients function from tidepool-cli/lib/deletePatients
+      // Create Credentials object for the function call
+      const creds: Credentials = {
+        userName: credentials.userName,
+        password: credentials.password,
+        baseUrl: credentials.baseUrl,
+      };
+      
+      // Try different parameter order - credentials first, then clinicId, tagId
+      await deletePatients(creds, clinicId, tagId);
+      
+      console.log("Successfully deleted patients using deletePatients function");
+      
+    } catch (error) {
+      console.error("Error calling deletePatients:", error.message);
+      throw error;
+    }
+  }
   
   test.beforeAll(async () => {
     // Set a longer timeout for setup
@@ -35,6 +63,110 @@ test.describe("Dashboard Offset Verification Tests", { tag: '@scenario1' }, () =
 
     console.log("Environment variables validated successfully");
     
+    // Check if data setup should be performed (configurable via environment variable)
+    const shouldSetupData = process.env.SETUP_DASHBOARD_DATA?.toLowerCase() === 'true';
+    console.log(`Data setup ${shouldSetupData ? 'enabled' : 'disabled'} via SETUP_DASHBOARD_DATA environment variable`);
+
+    if (shouldSetupData) {
+      console.log("Setting up dashboard offset test data...");
+
+      try {
+        // Clean up existing dashboard patients using the helper function
+        await cleanupDashboardPatients();
+
+        // Create users with offset 0 minutes
+        console.log("Creating users with 0 minute offset...");
+        const tirCounts0 = {
+          "Time below 3.0 mmol/L > 1%": 50,
+          "Time below 3.9 mmol/L > 4%": 40,
+          "Drop in Time in Range > 15%": 40,
+          "Time in Range < 70%": 40,
+          "CGM Wear Time <70%": 40,
+          "Meeting Targets": 40
+        };
+
+        await createDashboardOffset(
+          tirCounts0,
+          14, // period length in days
+          0, // offset 0 minutes
+          "Test Patient Offset 0",
+          clinicId,
+          tagId,
+          credentials
+        );
+
+        // Create users with offset 2*1440 minutes (2 days)
+        console.log("Creating users with 2 day offset...");
+        const tirCounts2Days = {
+          "Time below 3.0 mmol/L > 1%": 40,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 0,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
+
+        await createDashboardOffset(
+          tirCounts2Days,
+          14, // period length in days
+          2 * 1440, // offset 2 days
+          "Test Patient Offset 2Days",
+          clinicId,
+          tagId,
+          credentials
+        );
+
+        // Create users with offset 7*1440 minutes (7 days)
+        console.log("Creating users with 7 day offset...");
+        const tirCounts7Days = {
+          "Time below 3.0 mmol/L > 1%": 40,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 0,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
+
+        await createDashboardOffset(
+          tirCounts7Days,
+          14, // period length in days
+          7 * 1440, // offset 7 days
+          "Test Patient Offset 7Days",
+          clinicId,
+          tagId,
+          credentials
+        );
+
+        // Create users with offset 14*1440 minutes (14 days)
+        console.log("Creating users with 14 day offset...");
+        const tirCounts14Days = {
+          "Time below 3.0 mmol/L > 1%": 40,
+          "Time below 3.9 mmol/L > 4%": 0,
+          "Drop in Time in Range > 15%": 0,
+          "Time in Range < 70%": 0,
+          "CGM Wear Time <70%": 0,
+          "Meeting Targets": 0
+        };
+
+        await createDashboardOffset(
+          tirCounts14Days,
+          14, // period length in days
+          14 * 1440, // offset 14 days
+          "Test Patient Offset 14Days",
+          clinicId,
+          tagId,
+          credentials
+        );
+
+        console.log("Dashboard offset test data setup completed successfully!");
+
+      } catch (error) {
+        console.error("Setup failed with error:", error);
+        throw error;
+      }
+    } else {
+      console.log("Skipping data setup - using existing dashboard data");
+    }
   });
 
   test("should verify dashboard counts with correct offset data", async ({ page }) => {

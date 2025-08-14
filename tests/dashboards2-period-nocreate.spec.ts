@@ -89,7 +89,16 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - without data in
 
     console.log("Environment variables validated successfully");
     console.log(`Using TAG_SCENARIO2_ID: ${tagId}`);
-    console.log("Setting up dashboard scenario 2 test data with period length variations...");
+    
+    // Check if data setup should be performed (configurable via environment variable)
+    const shouldSetupData = process.env.SETUP_DASHBOARD_DATA?.toLowerCase() === 'true';
+    console.log(`Data setup ${shouldSetupData ? 'enabled' : 'disabled'} via SETUP_DASHBOARD_DATA environment variable`);
+    
+    if (shouldSetupData) {
+      console.log("No data setup configured for this test - it uses existing data");
+    } else {
+      console.log("Skipping data setup - using existing dashboard data");
+    }
 
     
   });

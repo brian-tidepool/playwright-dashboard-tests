@@ -89,46 +89,55 @@ test.describe("Dashboard Scenario 4 - 24 Hours Period Length - CGM Use Variation
 
     console.log("Environment variables validated successfully");
     console.log(`Using TAG_SCENARIO4_ID: ${tagId}`);
-    console.log("Setting up dashboard scenario 4 test data with CGM use variation...");
+    
+    // Check if data setup should be performed (configurable via environment variable)
+    const shouldSetupData = process.env.SETUP_DASHBOARD_DATA?.toLowerCase() === 'true';
+    console.log(`Data setup ${shouldSetupData ? 'enabled' : 'disabled'} via SETUP_DASHBOARD_DATA environment variable`);
 
-    try {
-      // Pre-processing step: Clean up existing dashboard patients using the helper function
-      await cleanupDashboardPatients();
+    if (shouldSetupData) {
+      console.log("Setting up dashboard scenario 4 test data with CGM use variation...");
 
-      // Create comprehensive dataset with single createDashboardOffset call
-      // All patients will have TIR pattern: [1, 1, 0, 1, 1, 1, Today, 1 day]
-      // This matches: [Time below 54 mg/dL > 1%, Time below 70 mg/dL > 4%, Drop in Time in Range > 15%, 
-      //                Time in Range < 70%, CGM Wear Time < 70%, Meeting Targets, Last Data Uploaded Date, Summarizing Period Length]
-      console.log("Creating comprehensive dataset with TIR pattern [1,1,0,1,1,1] for scenario4...");
-      
-      const comprehensiveTirCounts = {
-        "Time below 3.0 mmol/L > 1%": 1,     // Time below 54 mg/dL > 1%
-        "Time below 3.9 mmol/L > 4%": 1,     // Time below 70 mg/dL > 4%
-        "Drop in Time in Range > 15%": 0,     // Drop in Time in Range > 15%
-        "Time in Range < 70%": 1,             // Time in Range < 70%
-        "CGM Wear Time <70%": 1,              // CGM Wear Time < 70%
-        "Meeting Targets": 1                  // Meeting Targets
-      };
+      try {
+        // Pre-processing step: Clean up existing dashboard patients using the helper function
+        await cleanupDashboardPatients();
 
-      // Single call to create the entire dataset (5 patients total)
-      // This will create patients that appear in different dashboard sections based on verification logic
-      await createDashboardOffset(
-        comprehensiveTirCounts,
-        1, // period length: 1 day
-        0, // offset: 0 minutes (Today)
-        "Test Patient Scenario4",
-        clinicId,
-        tagId,
-        credentials
-      );
+        // Create comprehensive dataset with single createDashboardOffset call
+        // All patients will have TIR pattern: [1, 1, 0, 1, 1, 1, Today, 1 day]
+        // This matches: [Time below 54 mg/dL > 1%, Time below 70 mg/dL > 4%, Drop in Time in Range > 15%, 
+        //                Time in Range < 70%, CGM Wear Time < 70%, Meeting Targets, Last Data Uploaded Date, Summarizing Period Length]
+        console.log("Creating comprehensive dataset with TIR pattern [1,1,0,1,1,1] for scenario4...");
+        
+        const comprehensiveTirCounts = {
+          "Time below 3.0 mmol/L > 1%": 1,     // Time below 54 mg/dL > 1%
+          "Time below 3.9 mmol/L > 4%": 1,     // Time below 70 mg/dL > 4%
+          "Drop in Time in Range > 15%": 0,     // Drop in Time in Range > 15%
+          "Time in Range < 70%": 1,             // Time in Range < 70%
+          "CGM Wear Time <70%": 1,              // CGM Wear Time < 70%
+          "Meeting Targets": 1                  // Meeting Targets
+        };
 
-      console.log("Dashboard scenario 4 test data setup completed successfully!");
-      console.log("Created comprehensive dataset with TIR pattern [1,1,0,1,1,1] for 24-hour period");
-      console.log("Single createDashboardOffset call generated patients with all required attributes");
-      
-    } catch (error) {
-      console.error("Setup failed with error:", error);
-      throw error;
+        // Single call to create the entire dataset (5 patients total)
+        // This will create patients that appear in different dashboard sections based on verification logic
+        await createDashboardOffset(
+          comprehensiveTirCounts,
+          1, // period length: 1 day
+          0, // offset: 0 minutes (Today)
+          "Test Patient Scenario4",
+          clinicId,
+          tagId,
+          credentials
+        );
+
+        console.log("Dashboard scenario 4 test data setup completed successfully!");
+        console.log("Created comprehensive dataset with TIR pattern [1,1,0,1,1,1] for 24-hour period");
+        console.log("Single createDashboardOffset call generated patients with all required attributes");
+        
+      } catch (error) {
+        console.error("Setup failed with error:", error);
+        throw error;
+      }
+    } else {
+      console.log("Skipping data setup - using existing dashboard data");
     }
   });
 

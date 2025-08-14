@@ -104,48 +104,57 @@ test.describe(
 
       console.log("Environment variables validated successfully");
       console.log(`Using TAG_SCENARIO3_ID: ${tagId}`);
-      console.log(
-        "Setting up dashboard scenario 3 test data with all categories..."
-      );
+      
+      // Check if data setup should be performed (configurable via environment variable)
+      const shouldSetupData = process.env.SETUP_DASHBOARD_DATA?.toLowerCase() === 'true';
+      console.log(`Data setup ${shouldSetupData ? 'enabled' : 'disabled'} via SETUP_DASHBOARD_DATA environment variable`);
 
-      try {
-        // Pre-processing step: Clean up existing dashboard patients using the helper function
-        await cleanupDashboardPatients();
-
-        // Create patient data set with one patient in each category (excluding Data Issues)
-        // TIR Input attributes: [ Time below 54 mg/dL > 1%, Time below 70 mg/dL > 4%, Drop in Time in Range > 15%, Time in Range < 70%, CGM Wear Time < 70%, Meeting Targets, Last Data Uploaded Date, Summarizing Period Length]
-        // Values: [ 1, 1, 1, 1, 1, 1, Today, 30 days]
-
-        console.log("Creating comprehensive dataset for all categories...");
-        const allCategoriesTirCounts = {
-          "Time below 3.0 mmol/L > 1%": 1,
-          "Time below 3.9 mmol/L > 4%": 1,
-          "Drop in Time in Range > 15%": 0,
-          "Time in Range < 70%": 1,
-          "CGM Wear Time <70%": 1,
-          "Meeting Targets": 1,
-        };
-
-        await createDashboardOffset(
-          allCategoriesTirCounts,
-          30, // period length: 30 days (as specified in requirements)
-          0, // offset: 0 minutes (Today)
-          "Test Patient Scenario3 AllCategories",
-          clinicId,
-          tagId,
-          credentials
-        );
-
+      if (shouldSetupData) {
         console.log(
-          "Dashboard scenario 3 test data setup completed successfully!"
+          "Setting up dashboard scenario 3 test data with all categories..."
         );
-        console.log(
-          "Created dataset with 1 patient appearing in each category"
-        );
-        
-      } catch (error) {
-        console.error("Setup failed with error:", error);
-        throw error;
+
+        try {
+          // Pre-processing step: Clean up existing dashboard patients using the helper function
+          await cleanupDashboardPatients();
+
+          // Create patient data set with one patient in each category (excluding Data Issues)
+          // TIR Input attributes: [ Time below 54 mg/dL > 1%, Time below 70 mg/dL > 4%, Drop in Time in Range > 15%, Time in Range < 70%, CGM Wear Time < 70%, Meeting Targets, Last Data Uploaded Date, Summarizing Period Length]
+          // Values: [ 1, 1, 1, 1, 1, 1, Today, 30 days]
+
+          console.log("Creating comprehensive dataset for all categories...");
+          const allCategoriesTirCounts = {
+            "Time below 3.0 mmol/L > 1%": 1,
+            "Time below 3.9 mmol/L > 4%": 1,
+            "Drop in Time in Range > 15%": 0,
+            "Time in Range < 70%": 1,
+            "CGM Wear Time <70%": 1,
+            "Meeting Targets": 1,
+          };
+
+          await createDashboardOffset(
+            allCategoriesTirCounts,
+            30, // period length: 30 days (as specified in requirements)
+            0, // offset: 0 minutes (Today)
+            "Test Patient Scenario3 AllCategories",
+            clinicId,
+            tagId,
+            credentials
+          );
+
+          console.log(
+            "Dashboard scenario 3 test data setup completed successfully!"
+          );
+          console.log(
+            "Created dataset with 1 patient appearing in each category"
+          );
+          
+        } catch (error) {
+          console.error("Setup failed with error:", error);
+          throw error;
+        }
+      } else {
+        console.log("Skipping data setup - using existing dashboard data");
       }
     });
 
