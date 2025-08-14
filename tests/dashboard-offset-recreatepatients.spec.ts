@@ -237,9 +237,6 @@ test.describe("Dashboard Offset Verification Tests", { tag: '@scenario1' }, () =
         console.log("Clicking Next button...");
         await page.getByRole('button', { name: 'Next' }).click();
         
-        // Wait for page to load after clicking Next button
-        await page.waitForLoadState('networkidle');
-        
         // Wait after clicking Next button (configurable via environment variable)
         console.log(`Waiting ${waitAfterDashboardClick}ms after clicking Next button...`);
         await page.waitForTimeout(waitAfterDashboardClick);
