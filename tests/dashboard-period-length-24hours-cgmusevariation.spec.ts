@@ -209,6 +209,10 @@ test.describe("Dashboard Scenario 4 - 24 Hours Period Length - CGM Use Variation
         // Wait for Next button to become enabled and click it
         console.log("Clicking Next button...");
         await page.getByRole('button', { name: 'Next' }).click();
+        
+        // Wait after clicking Next button (configurable via environment variable)
+        console.log(`Waiting ${waitAfterDashboardClick}ms after clicking Next button...`);
+        await page.waitForTimeout(waitAfterDashboardClick);
 
       } catch (modalError) {
         console.log("Modal handling failed:", modalError.message);

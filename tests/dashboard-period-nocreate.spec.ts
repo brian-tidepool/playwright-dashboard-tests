@@ -166,6 +166,10 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - without data in
         // Wait for Next button to become enabled and click it
         console.log("Clicking Next button...");
         await page.getByRole('button', { name: 'Next' }).click();
+        
+        // Wait after clicking Next button (configurable via environment variable)
+        console.log(`Waiting ${waitAfterDashboardClick}ms after clicking Next button...`);
+        await page.waitForTimeout(waitAfterDashboardClick);
 
       } catch (modalError) {
         console.log("Modal handling failed:", modalError.message);
@@ -198,6 +202,10 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - without data in
           // Click Apply button
           console.log("Clicking Apply button...");
           await page.getByRole('button', { name: 'Apply' }).click();
+          
+          // Wait after clicking Apply button (configurable via environment variable)
+          console.log(`Waiting ${waitAfterDashboardClick}ms after clicking Apply button...`);
+          await page.waitForTimeout(waitAfterDashboardClick);
         }
 
         // Wait for dashboard to load
