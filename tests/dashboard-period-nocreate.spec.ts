@@ -3,7 +3,7 @@ import { Credentials } from "tidepool-cli/lib/credentials";
 import { createDashboardOffset } from "tidepool-cli/lib/dashboardScenarioSelector";
 import { deletePatients } from "tidepool-cli/lib/deletePatients";
 
-test.describe("Dashboard Scenario 2 - Period Length Variations - without data initialization", { tag: '@scenario2' }, () => {
+test.describe("Dashboard Scenario 2 - Period Length Variations - without data initialization", () => {
   // Declare variables at test suite level for proper scoping
   let credentials: {
     userName: string;
@@ -155,9 +155,9 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - without data in
         console.log("Selecting scenario2 tag...");
         await page.locator('#patient-tags-select').getByText('scenario2').click();
 
-        // Select data recency '24 hours'
-        console.log("Selecting data recency '24 hours'...");
-        await page.locator('#lastData label').filter({ hasText: 'Within 24 hours' }).locator('svg').nth(1).click();
+        // Select data recency '30 days'
+        console.log("Selecting data recency '30 days'...");
+        await page.locator('#lastData label').filter({ hasText: 'Within 30 days' }).locator('svg').nth(1).click();
 
         // Select summarization period '24 hours'
         console.log("Selecting summarization period '24 hours'...");
