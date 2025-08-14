@@ -1,5 +1,4 @@
 name: Playwright Tests
-
 on:
   # Allow manual triggering with test name input
   workflow_dispatch:
@@ -16,7 +15,6 @@ on:
         description: 'Tag name to filter tests (e.g., @smoke, @regression, @critical)'
         required: false
         type: string
-
 jobs:
   test:
     timeout-minutes: 60
@@ -27,25 +25,51 @@ jobs:
         # Test on multiple Node.js versions if needed
         node-version: [20]
       fail-fast: false
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-
+        # Add cache busting to npm cache
+        cache-dependency-path: |
+          package-lock.json
+          package.json
+    - name: Cache Playwright browsers with cache busting
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        # Add run_id for cache busting to ensure fresh browsers per run
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}-${{ github.run_id }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}-
+          ${{ runner.os }}-playwright-
+    - name: Clear application caches
+      run: |
+        # Clear npm cache to prevent stale data
+        npm cache clean --force
+        # Clear any application build caches
+        rm -rf .next/cache 2>/dev/null || true
+        rm -rf dist/ 2>/dev/null || true
+        rm -rf build/ 2>/dev/null || true
+        rm -rf node_modules/.cache 2>/dev/null || true
+        # Clear any test-specific caches
+        rm -rf test-results/ 2>/dev/null || true
+        rm -rf playwright-report/ 2>/dev/null || true
     - name: Install dependencies
       run: |
         npm ci
         npm run install-tidepool
-
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
-
+    - name: Clear browser data before tests
+      run: |
+        # Clear any potential browser profile data
+        rm -rf ~/.cache/ms-playwright/*/browser_context* 2>/dev/null || true
+        # Ensure clean test environment
+        echo "Browser caches cleared for fresh test run"
     - name: Run Playwright tests
       run: |
         if [ -n "${{ github.event.inputs.tag_name }}" ]; then
@@ -62,6 +86,8 @@ jobs:
           npm test
         fi
       env:
+        # Add cache busting environment variable for API calls
+        CACHE_BUSTER: ${{ github.run_id }}-${{ github.run_attempt }}
         # Tidepool Environment URL
         TIDEPOOL_BASE_URL: ${{ vars.TIDEPOOL_BASE_URL }}
         # Dashboard Configuration
@@ -76,19 +102,17 @@ jobs:
         # Tidepool Login Credentials
         TIDEPOOL_USERNAME: ${{ secrets.TIDEPOOL_USERNAME }}
         TIDEPOOL_PASSWORD: ${{ secrets.TIDEPOOL_PASSWORD }}
-
     - name: Upload Playwright Report
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: playwright-report-node-${{ matrix.node-version }}
+        name: playwright-report-node-${{ matrix.node-version }}-${{ github.run_id }}
         path: playwright-report/
         retention-days: 30
-
     - name: Upload Test Results
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: test-results-node-${{ matrix.node-version }}
+        name: test-results-node-${{ matrix.node-version }}-${{ github.run_id }}
         path: test-results/
         retention-days: 30
