@@ -206,6 +206,9 @@ test.describe("Dashboard Scenario 3 - Period Length Variations - All Categories"
         console.log("Clicking Next button...");
         await page.getByRole('button', { name: 'Next' }).click();
         
+        // Wait for page to load after clicking Next button
+        await page.waitForLoadState('networkidle');
+        
         // Wait after clicking Next button (configurable via environment variable)
         console.log(`Waiting ${waitAfterDashboardClick}ms after clicking Next button...`);
         await page.waitForTimeout(waitAfterDashboardClick);
@@ -251,6 +254,9 @@ test.describe("Dashboard Scenario 3 - Period Length Variations - All Categories"
           // Click Apply button
           console.log("Clicking Apply button...");
           await page.getByRole('button', { name: 'Apply' }).click();
+          
+          // Wait for page to load after clicking Apply button
+          await page.waitForLoadState('networkidle');
           
           // Wait after clicking Apply button (configurable via environment variable)
           console.log(`Waiting ${waitAfterDashboardClick}ms after clicking Apply button...`);
