@@ -253,9 +253,9 @@ test.describe("Dashboard Scenario 2 - Period Length Variations - with data initi
         console.log("Selecting scenario2 tag...");
         await page.locator('#patient-tags-select').getByText('scenario2').click();
 
-        // Select data recency '24 hours'
-        console.log("Selecting data recency '24 hours'...");
-        await page.locator('#lastData label').filter({ hasText: 'Within 24 hours' }).locator('svg').nth(1).click();
+        // Select data recency '30 days'
+        console.log("Selecting data recency '30 days'...");
+        await page.locator('#lastData label').filter({ hasText: 'Within 30 days' }).locator('svg').nth(1).click();
 
         // Select summarization period '24 hours'
         console.log("Selecting summarization period '24 hours'...");
