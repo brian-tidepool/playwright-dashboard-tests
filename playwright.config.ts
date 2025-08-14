@@ -24,7 +24,7 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 0 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 1, // Force single worker for context isolation
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -34,6 +34,29 @@ export default defineConfig({
 
     /* Force headless mode in CI, allow headed locally */
     headless: process.env.CI ? true : false,
+    
+    /* Fresh context settings - ensure clean browser state */
+    acceptDownloads: true,
+    ignoreHTTPSErrors: true,
+    
+    /* Clear browser data between tests - don't persist storage state */
+    storageState: undefined,
+    
+    /* Keep default viewport dimensions */
+    // viewport: { width: 1280, height: 720 }, // Commented out to keep default
+    
+    /* Ensure fresh context by not reusing contexts */
+    reuseExistingServer: false,
+    
+    /* Set locale and timezone for consistency */
+    locale: 'en-US',
+    timezoneId: 'America/New_York',
+    
+    /* Disable offline mode */
+    offline: false,
+    
+    /* Clear permissions between tests */
+    permissions: [],
     
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -53,11 +76,63 @@ export default defineConfig({
             '--no-sandbox',
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
-            '--disable-gpu'
+            '--disable-gpu',
+            // Additional args for fresh context isolation
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding'
           ]
-        } : {}
+        } : {
+          // Non-CI launch options for fresh context
+          args: [
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding'
+          ]
+        }
       },
     },
+    
+    // Optional: Add a specific project for dashboard scenario tests
+    {
+      name: 'dashboard-tests',
+      testMatch: '**/dashboard-scenario-*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Enhanced fresh context settings specifically for dashboard tests
+        acceptDownloads: true,
+        ignoreHTTPSErrors: true,
+        storageState: undefined,
+        // Keep default viewport dimensions for dashboard tests
+        // viewport: { width: 1280, height: 720 }, // Commented out to use default
+        permissions: [],
+        locale: 'en-US',
+        timezoneId: 'America/New_York',
+        
+        // Dashboard-specific context options
+        contextOptions: {
+          // Additional context isolation for dashboard tests
+          clearCookies: true,
+          clearPermissions: true,
+        },
+        
+        launchOptions: {
+          args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-gpu',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding',
+            // Additional isolation for dashboard tests
+            '--disable-extensions',
+            '--disable-plugins',
+            '--disable-default-apps'
+          ]
+        }
+      }
+    }
   ],
 
   /* Run your local dev server before starting the tests */
