@@ -207,6 +207,11 @@ test.describe("Dashboard Offset Verification Tests", { tag: '@scenario1' }, () =
       console.log("Clicking TIDE Dashboard View...");
       await page.waitForSelector('text="TIDE Dashboard View"', { timeout: 15000 });
       await page.click('text="TIDE Dashboard View"');
+      
+      // Wait after clicking TIDE Dashboard View (configurable via environment variable)
+      const waitAfterDashboardClick = parseInt(process.env.WAIT_AFTER_DASHBOARD_CLICK || '1000', 10);
+      console.log(`Waiting ${waitAfterDashboardClick}ms after clicking TIDE Dashboard View...`);
+      await page.waitForTimeout(waitAfterDashboardClick);
 
       // Handle modal if it appears
       console.log("Checking for dashboard configuration modal...");

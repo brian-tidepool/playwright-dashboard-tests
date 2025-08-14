@@ -72,6 +72,7 @@ jobs:
         CLINIC_ID: ${{ vars.CLINIC_ID }}
         # Test Configuration
         WAIT_SUMMARY_CALCULATION_FINISH: ${{ vars.WAIT_SUMMARY_CALCULATION_FINISH }}
+        WAIT_AFTER_DASHBOARD_CLICK: ${{ vars.WAIT_AFTER_DASHBOARD_CLICK }}
         # Tidepool Login Credentials
         TIDEPOOL_USERNAME: ${{ secrets.TIDEPOOL_USERNAME }}
         TIDEPOOL_PASSWORD: ${{ secrets.TIDEPOOL_PASSWORD }}
