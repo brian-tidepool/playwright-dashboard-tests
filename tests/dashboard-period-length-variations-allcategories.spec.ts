@@ -67,7 +67,7 @@ test.describe(
       }
     }
 
-    test.beforeAll(async () => {
+    test.beforeAll(async ({ page }) => {
       // Set a longer timeout for setup
       test.setTimeout(12000000); // 20 minutes for setup (4 batches)
 
@@ -142,6 +142,11 @@ test.describe(
         console.log(
           "Created dataset with 1 patient appearing in each category"
         );
+        await page.context().clearCookies();
+        await page.evaluate(() => {
+          localStorage.clear();
+          sessionStorage.clear();
+        });
       } catch (error) {
         console.error("Setup failed with error:", error);
         throw error;
@@ -271,7 +276,7 @@ test.describe(
             `Waiting ${waitAfterDashboardClick}ms after clicking Next button...`
           );
           await page.waitForTimeout(waitAfterDashboardClick);
-          await page.reload({ waitUntil: 'load' });
+          await page.reload({ waitUntil: "load" });
         } catch (modalError) {
           console.log("Modal handling failed:", modalError.message);
           throw modalError;
