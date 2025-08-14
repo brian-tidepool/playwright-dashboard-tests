@@ -67,7 +67,7 @@ test.describe(
       }
     }
 
-    test.beforeAll(async ({ page }) => {
+    test.beforeAll(async () => {
       // Set a longer timeout for setup
       test.setTimeout(12000000); // 20 minutes for setup (4 batches)
 
@@ -142,11 +142,7 @@ test.describe(
         console.log(
           "Created dataset with 1 patient appearing in each category"
         );
-        await page.context().clearCookies();
-        await page.evaluate(() => {
-          localStorage.clear();
-          sessionStorage.clear();
-        });
+        
       } catch (error) {
         console.error("Setup failed with error:", error);
         throw error;
