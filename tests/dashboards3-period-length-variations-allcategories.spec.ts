@@ -293,8 +293,8 @@ test.describe(
         // Categories to verify (excluding Data Issues section)
         // Let's first discover what categories actually exist rather than hardcoding them
         const possibleCategories = [
-          "Time below 54 mg/dL > 1%",
-          "Time below 70 mg/dL > 4%",
+          "Time below 3.0 mmol/L > 1%",
+          "Time below 3.9 mmol/L > 4%",
           "Time in Range < 70%",
           "CGM Wear Time < 70%",
           "Meeting Targets",
