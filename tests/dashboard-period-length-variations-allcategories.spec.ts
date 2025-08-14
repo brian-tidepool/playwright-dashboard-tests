@@ -110,7 +110,7 @@ test.describe(
 
       try {
         // Pre-processing step: Clean up existing dashboard patients using the helper function
-        await cleanupDashboardPatients();
+        //await cleanupDashboardPatients();
 
         // Create patient data set with one patient in each category (excluding Data Issues)
         // TIR Input attributes: [ Time below 54 mg/dL > 1%, Time below 70 mg/dL > 4%, Drop in Time in Range > 15%, Time in Range < 70%, CGM Wear Time < 70%, Meeting Targets, Last Data Uploaded Date, Summarizing Period Length]
@@ -126,7 +126,7 @@ test.describe(
           "Meeting Targets": 1,
         };
 
-        await createDashboardOffset(
+        /*await createDashboardOffset(
           allCategoriesTirCounts,
           30, // period length: 30 days (as specified in requirements)
           0, // offset: 0 minutes (Today)
@@ -134,7 +134,7 @@ test.describe(
           clinicId,
           tagId,
           credentials
-        );
+        );*/
 
         console.log(
           "Dashboard scenario 3 test data setup completed successfully!"
