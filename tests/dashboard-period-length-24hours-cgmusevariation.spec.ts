@@ -198,9 +198,9 @@ test.describe("Dashboard Scenario 4 - 24 Hours Period Length - CGM Use Variation
         console.log("Selecting scenario4 tag...");
         await page.locator('#patient-tags-select').getByText('scenario4').click();
 
-        // Select data recency 'Within 24 hours'
-        console.log("Selecting data recency 'Within 24 hours'...");
-        await page.locator('#lastData label').filter({ hasText: 'Within 24 hours' }).locator('svg').nth(1).click();
+        // Select data recency 'Within 30 days'
+        console.log("Selecting data recency 'Within 30 days'...");
+        await page.locator('#lastData label').filter({ hasText: 'Within 30 days' }).locator('svg').nth(1).click();
 
         // Select summarization period '24 hours' for Number of Days to Summarize
         console.log("Selecting summarization period '24 hours'...");
